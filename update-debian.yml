@@ -1,0 +1,26 @@
+---
+- hosts:
+    all
+  gather_facts: no
+  vars:
+    verbose: false
+    log_dir: "log/dist-upgrade/{{ inventory_hostname }}"
+  pre_tasks:
+    - block:
+        - setup:
+      rescue:
+        - name: "Install required python-minimal package"
+          raw: "apt-get update && apt-get install -y --force-yes python-apt python-minimal"
+        - setup:
+  tasks:
+    - name: Update packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+        autoremove: yes
+
+    - name: Check if a reboot is required.
+      ansible.builtin.stat:
+        path: /var/run/reboot-required
+        get_md5: no
+      register: reboot_required_file
