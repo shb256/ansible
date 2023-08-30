@@ -1,7 +1,7 @@
 ---
 - hosts:
     all
-  gather_facts: no
+  gather_facts: yes
   vars:
     verbose: false
     log_dir: "log/dist-upgrade/{{ inventory_hostname }}"
