@@ -25,6 +25,6 @@
         get_md5: no
       register: reboot_required_file
 
-      - name: Information about reboot
-        debug:
-          var: reboot_required_file
+    - name: Information about reboot
+       debug:
+         var: reboot_required_file
