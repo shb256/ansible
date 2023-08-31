@@ -27,4 +27,4 @@
 
     - name: Information about reboot
       debug:
-        var: reboot_required_file
+        var: reboot_required_file.stat.exists
