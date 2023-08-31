@@ -26,5 +26,5 @@
       register: reboot_required_file
 
     - name: Information about reboot
-       debug:
-         var: reboot_required_file
+      debug:
+        var: reboot_required_file
