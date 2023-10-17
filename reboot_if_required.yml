@@ -7,12 +7,9 @@
     log_dir: "log/dist-upgrade/{{ inventory_hostname }}"
 
   tasks:
-    - name: Update packages
-      apt:
-        update_cache: yes
-        upgrade: dist
-        autoremove: yes
-
     - name: Information about reboot
       debug:
         var: reboot_required_file.stat.exists
+    - name: Reboot if required
+      reboot:
+      when: reboot_required_file.stat.exists == true
