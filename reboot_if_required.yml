@@ -7,9 +7,12 @@
     log_dir: "log/dist-upgrade/{{ inventory_hostname }}"
 
   tasks:
-    - name: Information about reboot
-      debug:
-        var: reboot_required_file.stat.exists
+    - name: Check if a reboot is required.
+      ansible.builtin.stat:
+        path: /var/run/reboot-required
+        get_md5: no
+      register: reboot_required_file
+      
     - name: Reboot if required
       reboot:
       when: reboot_required_file.stat.exists == true
