@@ -1,12 +1,5 @@
 ---
-- hosts: bld-worker2
-  become: true
-  remote_user: jgaa
-  become_user: root
-  vars_prompt:
-    - name: "ansible_become_pass"
-      prompt: "Su password"
-      private: yes
+- hosts: all
   tasks:
     - name: Prepare. Autoremove old packages
       apt:
