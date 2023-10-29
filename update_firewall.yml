@@ -6,6 +6,12 @@
   - name: Check Version
     ansible.builtin.shell:
       cmd: /usr/local/opnsense/scripts/firmware/check.sh
+      register: check
+  - debug:
+      msg: "{{ check.stdout }}"
   - name: Update Firewall
     ansible.builtin.shell:
       cmd: /usr/local/opnsense/scripts/firmware/update.sh &
+      register: update
+  - debug:
+      msg: "{{ update.stdout }}"
