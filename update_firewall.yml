@@ -8,4 +8,4 @@
       cmd: /usr/local/opnsense/scripts/firmware/check.sh
   - name: Update Firewall
     ansible.builtin.shell:
-      cmd: /usr/local/opnsense/scripts/firmware/update.sh
+      cmd: /usr/local/opnsense/scripts/firmware/update.sh &
