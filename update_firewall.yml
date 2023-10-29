@@ -6,7 +6,6 @@
   - name: Check Version
     ansible.builtin.shell:
       cmd: /usr/local/opnsense/scripts/firmware/check.sh
-      register: check
   - name: Update Firewall
     ansible.builtin.shell:
       cmd: /usr/local/opnsense/scripts/firmware/update.sh &
