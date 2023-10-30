@@ -31,3 +31,7 @@
         name: zabbix
         group: docker
         append: yes
+    - name: Restart Zabbix-Agent2
+      ansible.builtin.service:
+        name: zabbix-agent2
+        state: restarted
