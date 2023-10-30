@@ -17,3 +17,14 @@
       ansible.builtin.apt:
         name: zabbix-agent2
         update_cache: yes
+    - name: Configure the Zabbix agent
+      replace:
+        path: /etc/zabbix/zabbix_agentd.conf
+        regexp: '{{item.regexp}}'
+        replace: '{{item.replace}}'
+      with_items:
+        - {regexp: "^Server=127.0.0.1$", replace: "Server={{zabbix_server}}"}
+        - {regexp: "^ServerActive=127.0.0.1$", replace: "ServerActive={{zabbix_server}}"}
+        - {regexp: "^Hostname=Zabbix server$", replace: "Hostname={{ansible_hostname}}"}
+      vars:
+        - zabbix_server: {{zabbix_proxy}}
