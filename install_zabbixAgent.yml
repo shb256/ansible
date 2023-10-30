@@ -19,7 +19,7 @@
         update_cache: yes
     - name: Configure the Zabbix agent
       replace:
-        path: /etc/zabbix/zabbix_agentd2.conf
+        path: /etc/zabbix/zabbix_agent2.conf
         regexp: '{{item.regexp}}'
         replace: '{{item.replace}}'
       with_items:
