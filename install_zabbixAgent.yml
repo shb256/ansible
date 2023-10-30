@@ -29,7 +29,7 @@
     - name: Add zabbix user to docker group
       ansible.builtin.user:
         name: zabbix
-        group: docker
+        groups: docker
         append: yes
     - name: Restart Zabbix-Agent2
       ansible.builtin.service:
