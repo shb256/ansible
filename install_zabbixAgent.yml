@@ -23,8 +23,6 @@
         regexp: '{{item.regexp}}'
         replace: '{{item.replace}}'
       with_items:
-        - {regexp: "^Server=127.0.0.1$", replace: "Server={{zabbix_server}}"}
-        - {regexp: "^ServerActive=127.0.0.1$", replace: "ServerActive={{zabbix_server}}"}
+        - {regexp: "^Server=127.0.0.1$", replace: "Server={{zabbix_proxy}}"}
+        - {regexp: "^ServerActive=127.0.0.1$", replace: "ServerActive={{zabbix_proxy}}"}
         - {regexp: "^Hostname=Zabbix server$", replace: "Hostname={{ansible_hostname}}"}
-      vars:
-        - zabbix_server: {{zabbix_proxy}}
