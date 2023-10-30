@@ -26,3 +26,8 @@
         - {regexp: "^Server=127.0.0.1$", replace: "Server={{zabbix_proxy}}"}
         - {regexp: "^ServerActive=127.0.0.1$", replace: "ServerActive={{zabbix_proxy}}"}
         - {regexp: "^Hostname=Zabbix server$", replace: "Hostname={{inventory_hostname}}"}
+    - name: Add zabbix user to docker group
+      ansible.builtin.user:
+        name: zabbix
+        group: docker
+        append: yes
