@@ -4,9 +4,8 @@
   become: false
   tasks:
   - name: Get Firewall Version
-    shell:
-      cmd: opnsense-version
-      register: VAR
+    ansible.builtin.command: opnsense-version
+    register: VAR
   - name: Echo example 2
     shell:
       cmd: "echo {{ VAR.stdout_lines }}"
