@@ -1,0 +1,19 @@
+---
+- hosts: all
+  gather_facts: yes
+  become: false
+  tasks:
+  - name: Get Firewall Version
+     shell:
+      cmd: opnsense-version
+      register: VAR
+  - name: Echo example 2
+    shell:
+      cmd: "echo {{ VAR.stdout_lines }}"
+    register: result
+  - name: Show registered variable
+    debug:
+      var: result
+  - name: Show result content only
+    debug:
+      msg: "{{ result }}"
