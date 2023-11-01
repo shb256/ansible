@@ -15,4 +15,4 @@
       var: result
   - name: Show result content only
     debug:
-      msg: "{{ result }}"
+      msg: "{{ result.stdout_lines }}"
