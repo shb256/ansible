@@ -1,0 +1,18 @@
+---
+- hosts: all
+  gather_facts: yes
+  become: false
+  tasks:
+  - name: Check Update
+    ansible.builtin.command: /usr/local/opnsense/scripts/firmware/check.sh
+    register: VAR
+  - name: Echo example 2
+    shell:
+      cmd: "echo {{ VAR.stdout_lines }}"
+    register: result
+  - name: Show registered variable
+    debug:
+      var: result
+  - name: Show result content only
+    debug:
+      msg: "{{ result }}"
