@@ -15,4 +15,4 @@
         log_path: C:\ansible_wu_install.txt
         server_selection: windows_update
         accept_list: 
-        - "{{update}}"
+        - {{update}}
