@@ -4,6 +4,7 @@
   become: false
   tasks:  
     - name: Search-only, return list of found updates (if any), log to C:\ansible_wu.txt
+      delegate_to: {{proxy}}
       win_updates:
         category_names: Application, Connectors, Critical Updates, Definition Updates, Developer Kits, Feature Packs, Guidance, Security Updates, Service Packs, Tools, Update Rollups, Updates
         state: searched
