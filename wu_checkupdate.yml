@@ -2,13 +2,14 @@
 - hosts: all
   gather_facts: yes
   become: false
+  vars:
+    ansible_user: {{username}}
+    ansible_password: {{password}}
+    ansible_connection: winrm
+    ansible_port: 5985
+    ansible_winrm_transport: kerberos
   tasks:  
     - name: Search-only, return list of found updates (if any), log to C:\ansible_wu.txt
-      ansible_user: {{username}}
-      ansible_password: {{password}}
-      ansible_connection: winrm
-      ansible_port: 5985
-      ansible_winrm_transport: kerberos
       win_updates:
         category_names: Application, Connectors, Critical Updates, Definition Updates, Developer Kits, Feature Packs, Guidance, Security Updates, Service Packs, Tools, Update Rollups, Updates
         state: searched
