@@ -14,4 +14,5 @@
         category_names: Application, Connectors, Critical Updates, Definition Updates, Developer Kits, Feature Packs, Guidance, Security Updates, Service Packs, Tools, Update Rollups, Updates
         log_path: C:\ansible_wu.txt
         server_selection: windows_update
-        accept_list: {{update}}
+        accept_list: 
+        - "{{update}}"
