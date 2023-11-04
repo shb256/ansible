@@ -3,8 +3,8 @@
   gather_facts: yes
   become: false
   tasks:  
-  - name: Search-only, return list of found updates (if any), log to C:\ansible_wu.txt
-    win_updates:
-      category_names: *
-      state: searched
-      log_path: C:\ansible_wu.txt
+    - name: Search-only, return list of found updates (if any), log to C:\ansible_wu.txt
+      win_updates:
+        category_names: *
+        state: searched
+        log_path: C:\ansible_wu.txt
