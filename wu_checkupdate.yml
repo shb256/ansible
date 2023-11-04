@@ -2,6 +2,11 @@
 - hosts: all
   gather_facts: yes
   become: false
+  ansible_user: {{username}}
+  ansible_password: {{password}}
+  ansible_connection: winrm
+  ansible_port: 5985
+  ansible_winrm_transport: kerberos
   tasks:  
     - name: Search-only, return list of found updates (if any), log to C:\ansible_wu.txt
       win_updates:
