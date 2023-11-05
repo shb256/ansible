@@ -1,7 +1,6 @@
 ---
 - hosts: all
-  gather_facts: yes
-  become: false
+  gather_facts: no
   tasks:  
     - name: Search-only, return list of found updates (if any), log to C:\ansible_wu.txt
       win_updates:
