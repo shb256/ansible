@@ -31,7 +31,9 @@
         name: zabbix
         groups: docker
         append: yes
-      when: "docker" in groups
+      when: 
+        - "'docker' in groups"
+        - "'docker' in group_names"
     - name: Restart Zabbix-Agent2
       ansible.builtin.service:
         name: zabbix-agent2
