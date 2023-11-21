@@ -1,0 +1,32 @@
+---
+- hosts: all
+  gather_facts: no
+  ignore_unreachable: true
+  strategy: free
+  tasks:
+  - name: Search-only, return list of found updates (if any), log to C:\ansible_wu.txt
+    block:
+    - name: Search
+      win_updates:
+        category_names: Application, Connectors, Critical Updates, Definition Updates, Developer Kits, Feature Packs, Guidance, Security Updates, Service Packs, Tools, Update Rollups, Updates, Drivers
+          #        state: searched
+        log_path: C:\ansible_wu_missing.txt
+        server_selection: windows_update
+      register: contains
+    rescue:
+    - name: Some thing gone wrong
+      ansible.windows.win_uri:
+        url: "{{server}}"
+        method: POST
+        body: "{'host':'{{inventory_hostname}}' , 'data':FAILD}"
+
+  - name: POST a Body to an Endpoint
+    ansible.windows.win_uri:
+      url: "{{server}}"
+      method: POST
+      force_basic_auth: true
+      url_username: Radiantly3224
+      url_password: Demystify-Scrambler-Clubbed9
+      content_type: application/json
+      body: "{'host':'{{inventory_hostname}}' , 'data':{{contains.updates}}}"
+
