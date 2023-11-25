@@ -2,7 +2,7 @@
 - hosts: all
   gather_facts: no
   ignore_unreachable: true
-  strategy: free
+  #strategy: free
   tasks:
   - name: Search-only, return list of found updates (if any), log to C:\ansible_wu.txt
     block:
