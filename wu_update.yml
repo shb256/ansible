@@ -20,6 +20,11 @@
         url: "{{server}}"
         method: POST
         body: "{'host':'{{inventory_hostname}}' , 'data':FAILD}"
+  - name: debug
+    ansible.builtin.debug:
+      msg:
+        #- "{{contains}}"
+      - "{'host':'{{inventory_hostname}}' , 'data':{{contains.updates}}, 'reboot':'{{contains.reboot_required}}' }"
 
   - name: POST a Body to an Endpoint
     ignore_errors: yes
