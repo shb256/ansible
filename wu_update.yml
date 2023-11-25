@@ -1,9 +1,31 @@
 ---
-- hosts: all
+- name: Identify reachable hosts
+  hosts: all
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - block:
+        - name: determine hosts that are reachable
+          ansible.builtin.wait_for_connection:
+            timeout: 10
+          vars:
+            ansible_connection: ssh
+        - name: add devices with connectivity to the "reachable" group
+          ansible.builtin.group_by:
+            key: reachable
+      rescue:
+        - name: debug print unreachable host(s)
+          ansible.builtin.debug: msg="cannot connect to {{ inventory_hostname }}"
+
+- name: Provision reachable hosts
+  hosts: reachable
   gather_facts: no
   #ignore_unreachable: true
-  #strategy: free
+  #strategy: free    
   tasks:
+  - name: debug print reachable host(s)
+      ansible.builtin.debug: msg="{{ inventory_hostname }} is reachable"
   - name: Search-only, return list of found updates (if any), log to C:\ansible_wu.txt
     block:
     - name: Search
@@ -22,7 +44,6 @@
         body: "{'host':'{{inventory_hostname}}' , 'data':FAILD}"
 
   - name: POST a Body to an Endpoint
-    ignore_errors: yes
     ansible.windows.win_uri:
       url: "{{server}}"
       method: POST
