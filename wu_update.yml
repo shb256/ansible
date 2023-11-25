@@ -23,6 +23,7 @@
         body: "{'host':'{{inventory_hostname}}' , 'data':FAILD}"
 
   - name: POST a Body to an Endpoint
+    ignore_errors: yes
     ansible.windows.win_uri:
       url: "{{server}}"
       method: POST
