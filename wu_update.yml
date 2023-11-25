@@ -21,12 +21,12 @@
         body: "{'host':'{{inventory_hostname}}' , 'data':FAILD}"
  
   - name: POST a Body to an Endpoint
-   ignore_errors: yes
-   ansible.windows.win_uri:
-     url: "{{server}}"
-     method: POST
-     force_basic_auth: true
-     url_username: "{{url_user}}"
-     url_password: "{{url_pass}}"
-     content_type: application/json
-     body: "{'host':'{{inventory_hostname}}' , 'data':{{contains.updates}}, 'reboot':'{{contains.reboot_required}}'}"
+    ignore_errors: yes
+    ansible.windows.win_uri:
+      url: "{{server}}"
+      method: POST
+      force_basic_auth: true
+      url_username: "{{url_user}}"
+      url_password: "{{url_pass}}"
+      content_type: application/json
+      body: "{'host':'{{inventory_hostname}}' , 'data':{{contains.updates}}, 'reboot':'{{contains.reboot_required}}'}"
