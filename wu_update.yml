@@ -7,6 +7,7 @@
   - name: Search-only, return list of found updates (if any), log to C:\ansible_wu.txt
     block:
     - name: Search
+      ignore_unreachable: true
       win_updates:
         category_names: Application, Connectors, Critical Updates, Definition Updates, Developer Kits, Feature Packs, Guidance, Security Updates, Service Packs, Tools, Update Rollups, Updates, Drivers
           #        state: searched
