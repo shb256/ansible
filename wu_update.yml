@@ -2,8 +2,6 @@
 - name: Identify reachable hosts
   hosts: all
   connection: local
-  gather_facts: false
-
   tasks:
     - block:
         - name: determine hosts that are reachable
@@ -24,8 +22,6 @@
   #ignore_unreachable: true
   #strategy: free    
   tasks:
-  - name: debug print reachable host(s)
-      ansible.builtin.debug: msg="{{ inventory_hostname }} is reachable"
   - name: Search-only, return list of found updates (if any), log to C:\ansible_wu.txt
     block:
     - name: Search
