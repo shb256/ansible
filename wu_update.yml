@@ -25,8 +25,8 @@
       url: "{{server}}"
       method: POST
       force_basic_auth: true
-      url_username: Radiantly3224
-      url_password: Demystify-Scrambler-Clubbed9
+      url_username: {{url_user}}
+      url_password: {{url_pass}}
       content_type: application/json
-      body: "{'host':'{{inventory_hostname}}' , 'data':{{contains.updates}}}"
+      body: "{'host':'{{inventory_hostname}}' , 'data':{{contains.updates}}, 'reboot':'{{contains.reboot_required}}'}"
 
