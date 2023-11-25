@@ -2,6 +2,8 @@
 - hosts: all
   gather_facts: no
   ignore_unreachable: true
+  vars:
+  - contains.reboot_required: unset
   strategy: free
   tasks:
   - name: Search-only, return list of found updates (if any), log to C:\ansible_wu.txt
