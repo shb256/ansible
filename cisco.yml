@@ -1,0 +1,44 @@
+---
+- name: Abfrage der Geräte-ID von NetBox
+  hosts: "{{host}}"
+  gather_facts: false
+
+  tasks:
+    - name: Abrufen der Geräteinformationen von NetBox
+      uri:
+        url: "{{ netbox_url }}/api/dcim/devices/?name={{ inventory_hostname }}"
+        method: GET
+        headers:
+          Authorization: "Token {{ netbox_token }}"
+          Content-Type: "application/json"
+      register: device_info
+      delegate_to: 127.0.0.1
+
+    - name: überprüfen, ob das Gerät gefunden wurde
+      fail:
+        msg: "Gerät '{{ inventory_hostname }}' nicht gefunden."
+      when: device_info.json.count == 0
+      delegate_to: 127.0.0.1
+
+    - name: Abrufen der gerenderten Konfiguration von NetBox
+      uri:
+        url: "{{ netbox_url }}/api/dcim/devices/{{ device_info.json.results[0].id }}/render-config/"
+        method: POST
+        headers:
+          Authorization: "Token {{ netbox_token }}"
+      register: rendered_config
+      delegate_to: 127.0.0.1
+
+    - name: Creates directory
+      ansible.builtin.file:
+        path: /tmp/tasks
+        state: directory
+
+    - name: Gerenderte Konfiguration speichern
+      copy:
+        content: "{{ rendered_config.json.content }}"
+        dest: "/tmp/tasks/{{inventory_hostname}}.yml"
+      delegate_to: 127.0.0.1
+
+    - name: Include task list in play
+      include_tasks: /tmp/tasks/{{inventory_hostname}}.yml
