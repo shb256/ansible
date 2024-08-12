@@ -40,7 +40,10 @@
         dest: "/tmp/tasks/{{inventory_hostname}}.yml"
       delegate_to: 127.0.0.1
 
-  
+    - name: Zeige den Inhalt der Variable als String
+      debug:
+        msg: "Der Inhalt der Variable ist: {{ rendered_config.json.content | string }}"
+
     - name: Update Journal eintrag
       uri:
         url: "{{ netbox_url ~ callback}}"
@@ -51,7 +54,7 @@
           Accept: "application/json"
         body: |
           {
-            "comments": {{ rendered_config.json.content | string }} ,
+            "comments": "{{ rendered_config.json.content | string }}" ,
              "kind": "success"
           }
         status_code: 200
