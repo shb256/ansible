@@ -51,7 +51,7 @@
           Accept: "application/json"
         body: |
           {
-            "comments": "{{ rendered_config.json.content | to_string }}",
+            "comments": "{{ rendered_config.json.content | string }}",
              "kind": "success"
           }
         status_code: 200
