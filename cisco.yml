@@ -28,6 +28,22 @@
           Authorization: "Token {{ netbox_token }}"
       register: rendered_config
       delegate_to: 127.0.0.1
+      
+    - name: Abrufen der gerenderten Konfiguration von NetBox
+      uri:
+        url: "{{ netbox_url ~ callback}}"
+        method: PATCH
+        headers:
+          Authorization: "Token {{ netbox_token }}"
+          Content-Type: "application/json"
+          Accept: "application/json"
+        body: |
+          {
+            "comments": "{{ rendered_config }}",
+             "kind": "success"
+          }
+        status_code: 200
+      delegate_to: 127.0.0.1
 
     - name: Creates directory
       ansible.builtin.file:
