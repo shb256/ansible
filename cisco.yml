@@ -39,7 +39,7 @@
           Accept: "application/json"
         body: |
           {
-            "comments": "Test",
+            "comments": "{{ rendered_config.json.content }}",
              "kind": "success"
           }
         status_code: 200
