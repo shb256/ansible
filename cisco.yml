@@ -42,7 +42,7 @@
 
     - name: Zeige den Inhalt der Variable als String
       debug:
-        msg: "Der Inhalt der Variable ist: {{ rendered_config.json.content | string }}"
+        msg: "Der Inhalt der Variable ist: {{ rendered_config.json.content | replace('\n', '\\n') | replace('\t', '\\t' }}"
 
     - name: Update Journal eintrag
       uri:
