@@ -28,22 +28,6 @@
           Authorization: "Token {{ netbox_token }}"
       register: rendered_config
       delegate_to: 127.0.0.1
-      
-    - name: Update Journal eintrag
-      uri:
-        url: "{{ netbox_url ~ callback}}"
-        method: PATCH
-        headers:
-          Authorization: "Token {{ netbox_token }}"
-          Content-Type: "application/json"
-          Accept: "application/json"
-        body: |
-          {
-            "comments": "{{ rendered_config.json.content | to_json  }}",
-             "kind": "success"
-          }
-        status_code: 200
-      delegate_to: 127.0.0.1
 
     - name: Creates directory
       ansible.builtin.file:
@@ -55,6 +39,27 @@
         content: "{{ rendered_config.json.content }}"
         dest: "/tmp/tasks/{{inventory_hostname}}.yml"
       delegate_to: 127.0.0.1
+
+- name: Lade den Inhalt der Datei /tmp/datei
+  set_fact:
+    file_content: "{{ lookup('file', '/tmp/tasks/{{inventory_hostname}}.yml') }}"
+  
+    - name: Update Journal eintrag
+      uri:
+        url: "{{ netbox_url ~ callback}}"
+        method: PATCH
+        headers:
+          Authorization: "Token {{ netbox_token }}"
+          Content-Type: "application/json"
+          Accept: "application/json"
+        body: |
+          {
+            "comments": "{{ file_content }}",
+             "kind": "success"
+          }
+        status_code: 200
+      delegate_to: 127.0.0.1
+
 
     - name: Include task list in play
       include_tasks: /tmp/tasks/{{inventory_hostname}}.yml
