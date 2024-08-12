@@ -40,9 +40,6 @@
         dest: "/tmp/tasks/{{inventory_hostname}}.yml"
       delegate_to: 127.0.0.1
 
-- name: Lade den Inhalt der Datei /tmp/datei
-  set_fact:
-    file_content: "{{ lookup('file', '/tmp/tasks/{{inventory_hostname}}.yml') }}"
   
     - name: Update Journal eintrag
       uri:
@@ -54,7 +51,7 @@
           Accept: "application/json"
         body: |
           {
-            "comments": "{{ file_content }}",
+            "comments": "{{ rendered_config.json.content | to_string }}",
              "kind": "success"
           }
         status_code: 200
