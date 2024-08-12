@@ -29,7 +29,7 @@
       register: rendered_config
       delegate_to: 127.0.0.1
       
-    - name: Abrufen der gerenderten Konfiguration von NetBox
+    - name: Update Journal eintrag
       uri:
         url: "{{ netbox_url ~ callback}}"
         method: PATCH
@@ -39,7 +39,7 @@
           Accept: "application/json"
         body: |
           {
-            "comments": "{{ rendered_config }}",
+            "comments": "Test",
              "kind": "success"
           }
         status_code: 200
