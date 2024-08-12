@@ -46,7 +46,7 @@
 
     - name: Update Journal eintrag
       uri:
-        url: "{{ netbox_url ~ callback}}"
+        url: "{{ netbox_url ~ callback }}"
         method: PATCH
         headers:
           Authorization: "Token {{ netbox_token }}"
@@ -54,11 +54,13 @@
           Accept: "application/json"
         body: |
           {
-            "comments": "Updated COnfig" ,
-             "kind": "success"
+            "comments": "{{ rendered_config.json.content | b64encode }}",
+            "kind": "success"
           }
         status_code: 200
+        body_format: json
       delegate_to: 127.0.0.1
+
 
 
     - name: Include task list in play
