@@ -14,7 +14,7 @@
         url: https://repo.zabbix.com/zabbix/7.0/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian12_all.deb
         dest: /root
     - name: Install Zabbix.de
-      command: dpkg -i /root/zabbix-release_latest+debian12_all.deb
+      command: dpkg -i --force-overwrite /root/zabbix-release_latest+debian12_all.deb
 
     - name: Update apt repo and cache on all Debian/Ubuntu boxes
       apt:
