@@ -5,11 +5,16 @@
       apt:
         autoremove: true
         clean: true
-
-    - name: Upgrade to latest release (apt-get dist-upgrade)
-      ansible.builtin.shell: |
-        sed -i 's/6.4/7.0/g' /etc/apt/sources.list.d/zabbix.list
-
+#
+#    - name: Upgrade to latest release (apt-get dist-upgrade)
+#      ansible.builtin.shell: |
+#        sed -i 's/6.4/7.0/g' /etc/apt/sources.list.d/zabbix.list
+    - name: Download Zabbix.deb
+      ansible.builtin.get_url:
+        url: https://repo.zabbix.com/zabbix/7.0/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian12_all.deb
+        dest: /root
+    - name: Install Zabbix.de
+      command: dpkg -i /root/zabbix-release_latest+debian12_all.deb
 
     - name: Update apt repo and cache on all Debian/Ubuntu boxes
       apt:
