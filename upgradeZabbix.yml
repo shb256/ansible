@@ -16,7 +16,7 @@
     - name: remove old zabbix.list
       command: rm -Rf /etc/apt/sources.list.d/zabbix.list
     - name: Install Zabbix.de
-      command: dpkg -i --force-overwrite /root/zabbix-release_latest+debian12_all.deb
+      command: DEBIAN_FRONTEND=noninteractive dpkg -i --force-overwrite --force-confnew /root/zabbix-release_latest+debian12_all.deb
 
     - name: Update apt repo and cache on all Debian/Ubuntu boxes
       apt:
