@@ -1,0 +1,21 @@
+---
+- hosts: all
+  tasks:
+    - name: Prepare. Autoremove old packages
+      apt:
+        autoremove: true
+        clean: true
+
+    - name: Upgrade to latest release (apt-get dist-upgrade)
+      ansible.builtin.shell: |
+        sed -i 's/6.4/7.0/g' /etc/apt/sources.list.d/zabbix.list
+
+
+    - name: Update apt repo and cache on all Debian/Ubuntu boxes
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+        cache_valid_time: 0
+
+    - name: Upgrade all packages on servers
+      apt: upgrade=dist force_apt_get=yes
