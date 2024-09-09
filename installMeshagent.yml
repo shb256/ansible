@@ -1,0 +1,9 @@
+---
+- hosts: all
+  tasks:
+    - name: Install wget
+      ansible.builtin.apt:
+        name: wget
+        state: present
+    - name: Install meshagent
+      ansible.builtin.shell: (wget "https://mc.wolftech.solutions/meshagents?script=1" --no-check-certificate -O ./meshinstall.sh || wget "https://mc.wolftech.solutions/meshagents?script=1" --no-proxy --no-check-certificate -O ./meshinstall.sh) && chmod 755 ./meshinstall.sh && ./meshinstall.sh https://mc.wolftech.solutions 'SF34qatEnwYmww$gueYDQXx8dx5kvq7g29zJK93qmAdR52HDusl61RM448vku0Ks' || ./meshinstall.sh https://mc.wolftech.solutions 'SF34qatEnwYmww$gueYDQXx8dx5kvq7g29zJK93qmAdR52HDusl61RM448vku0Ks' 
