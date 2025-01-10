@@ -3,12 +3,11 @@
 )
 #Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 #choco install wireguard -y
-
+Write-Host "Der API-Token lautet: $ApiToken"
 # Konfigurationsvariablen
 $NetboxUrl = "https://nb.durchhalten.org/api"  # URL zu deiner NetBox API
-#$ApiToken = ""            # Dein NetBox API-Token
+
 echo $ApiToken
-$ComputerName = "ASW-PC-02"     # Der Name des gesuchten Computers
 $ComputerName = $env:COMPUTERNAME
 $InterfaceName = "WG_WTS"                  # Das gewünschte Interface
 $wgConfigPath = "C:\Program Files\WireGuard\$InterfaceName.conf"
