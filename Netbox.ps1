@@ -7,6 +7,7 @@
 # Konfigurationsvariablen
 $NetboxUrl = "https://nb.durchhalten.org/api"  # URL zu deiner NetBox API
 #$ApiToken = ""            # Dein NetBox API-Token
+echo $ApiToken
 $ComputerName = "ASW-PC-02"     # Der Name des gesuchten Computers
 $ComputerName = $env:COMPUTERNAME
 $InterfaceName = "WG_WTS"                  # Das gewünschte Interface
