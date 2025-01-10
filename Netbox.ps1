@@ -137,8 +137,8 @@ if ($ipAddress.Count -eq 0) {
 $ip = $ipAddress[0].address
 Write-Output "IP-Adresse gefunden: $ip"
 
-$privateKey = wg genkey
-$publicKey = $privateKey | wg pubkey
+$privateKey = & 'C:\Program Files\WireGuard\wg.exe'  genkey
+$publicKey = $privateKey | & 'C:\Program Files\WireGuard\wg.exe'  pubkey
 
 Write-Output "Lade öffentlichen Schlüssel in NetBox hoch..."
 Update-LocalContext -DeviceId $deviceId -Key "WTS_Pub_WG" -Value $publicKey
@@ -176,6 +176,6 @@ Write-Output "WireGuard-Konfigurationsdatei wurde unter '$wgConfigPath' erstellt
 New-NetFirewallRule -DisplayName "Allow Traffic from 172.16.3.233 WTS" -Direction Inbound -Action Allow -RemoteAddress 172.16.3.233 -Protocol Any
 New-NetFirewallRule -DisplayName "Allow Traffic from 10.240.255.0/24 WTS" -Direction Inbound -Action Allow -RemoteAddress 10.240.255.0/24 -Protocol Any
 
-wireguard /installtunnelservice "$wgConfigPath"
+& 'C:\Program Files\WireGuard\wireguard.exe'  /installtunnelservice "$wgConfigPath"
 
 Write-Output "Skript abgeschlossen. Ergebnisse:"
