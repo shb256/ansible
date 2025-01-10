@@ -1,8 +1,9 @@
 ﻿param (
     [string]$ApiToken       # Definiert den Parameter "DeviceId" als string
 )
-#Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-#choco install wireguard -y
+$ApiToken = "6acc5a3b2925a3b097616e0c17a19c7e0726551c"
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+choco install wireguard -y
 Write-Host "Der API-Token lautet: $ApiToken"
 # Konfigurationsvariablen
 $NetboxUrl = "https://nb.durchhalten.org/api"  # URL zu deiner NetBox API
