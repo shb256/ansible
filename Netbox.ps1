@@ -200,4 +200,30 @@ New-NetFirewallRule -DisplayName "Allow Traffic from 10.240.255.0/24 WTS" -Direc
 & 'C:\Program Files\WireGuard\wireguard.exe'  /installtunnelservice "$wgConfigPath"
 
 
+# Ziel-Dateipfad
+$FilePath = "C:\ProgramData\ssh\sshd_config"
+
+# Hinzuzufügender Inhalt
+$ContentToAdd = @"
+Match Group administratoren
+       AuthorizedKeysFile __PROGRAMDATA__/ssh/administrators_authorized_keys
+"@
+
+# Sicherstellen, dass die Datei existiert
+if (-not (Test-Path -Path $FilePath)) {
+    Write-Host "Fehler: Datei '$FilePath' existiert nicht."
+    return
+}
+
+# Überprüfen, ob der Inhalt bereits vorhanden ist
+if (Get-Content -Path $FilePath | Select-String -SimpleMatch "Match Group administratoren") {
+    Write-Host "Die Konfiguration ist bereits vorhanden."
+} else {
+    # Inhalt zur Datei hinzufügen
+    Add-Content -Path $FilePath -Value $ContentToAdd -Encoding UTF8
+    Write-Host "Inhalt wurde erfolgreich zur Datei hinzugefügt."
+}
+
+restart-service sshd
+
 Write-Output "Skript abgeschlossen. Ergebnisse:"
