@@ -177,5 +177,6 @@ New-NetFirewallRule -DisplayName "Allow Traffic from 172.16.3.233 WTS" -Directio
 New-NetFirewallRule -DisplayName "Allow Traffic from 10.240.255.0/24 WTS" -Direction Inbound -Action Allow -RemoteAddress 10.240.255.0/24 -Protocol Any
 
 & 'C:\Program Files\WireGuard\wireguard.exe'  /installtunnelservice "$wgConfigPath"
+choco install openssh --params "/SSHServerFeature" -y
 
 Write-Output "Skript abgeschlossen. Ergebnisse:"
