@@ -2,6 +2,7 @@
 $ApiToken = $env:Token
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 choco install wireguard -y
+choco install openssh --params "/SSHServerFeature" -y
 
 # Konfigurationsvariablen
 $NetboxUrl = "https://nb.durchhalten.org/api"  # URL zu deiner NetBox API
@@ -149,6 +150,26 @@ $PublicKey = $device[0].config_context.WG_WTS_PublicKeyServer
 $Endpoint = $device[0].config_context.WG_WTS_Endpoint
 $PersistentKeepalive = $device[0].config_context.WG_WTS_PersistentKeepalive
 $AllowedIPs = $device[0].config_context.WG_WTS_AllowedIPs
+$pubSshKey = $device[0].config_context.pubSsshKey
+
+$FilePath = "C:\ProgramData\ssh\administrators_authorized_keys"
+
+# Sicherstellen, dass das Verzeichnis existiert
+if (-not (Test-Path -Path (Split-Path $FilePath))) {
+    New-Item -ItemType Directory -Path (Split-Path $FilePath) -Force
+}
+
+# Inhalt in die Datei schreiben
+Set-Content -Path $FilePath -Value $VariableContent -Encoding UTF8
+
+# Überprüfen, ob die Datei erfolgreich geschrieben wurde
+if (Test-Path -Path $FilePath) {
+    Write-Host "Inhalt wurde erfolgreich in die Datei geschrieben: $FilePath"
+    icacls.exe C:\ProgramData\ssh\administrators_authorized_keys /inheritance:r /grant "Administratoren:F" /grant "SYSTEM:F"
+} else {
+    Write-Host "Fehler: Datei konnte nicht erstellt werden."
+}
+
 
 # Inhalt der Konfigurationsdatei
 $wgConfigContent = @"
@@ -177,6 +198,6 @@ New-NetFirewallRule -DisplayName "Allow Traffic from 172.16.3.233 WTS" -Directio
 New-NetFirewallRule -DisplayName "Allow Traffic from 10.240.255.0/24 WTS" -Direction Inbound -Action Allow -RemoteAddress 10.240.255.0/24 -Protocol Any
 
 & 'C:\Program Files\WireGuard\wireguard.exe'  /installtunnelservice "$wgConfigPath"
-choco install openssh --params "/SSHServerFeature" -y
+
 
 Write-Output "Skript abgeschlossen. Ergebnisse:"
