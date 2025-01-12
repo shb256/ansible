@@ -94,9 +94,6 @@ function Get-IpAddressFromNetbox {
         # Abrufen der freien IP-Adresse
         $freeIpResponse = Invoke-RestMethod -Uri $freeIpUrl -Headers $Headers -Method Get
         if ($freeIpResponse.results.Count -gt 0) {
-            write-host "HIER"
-            write-host $freeIpResponse
-            write-host "DA"
             # Nächste freie IP-Adresse auswählen
             $freeIp = $freeIpResponse[0].address
             write-host "XXXX $freeIp XXX"
@@ -114,8 +111,12 @@ function Get-IpAddressFromNetbox {
             }
 
             # IP-Adresse in Netbox hinzufügen
-            $assignResponse = Invoke-RestMethod -Uri $assignIpUrl -Headers $Headers -Method Post -Body ($assignIpBody | ConvertTo-Json -Depth 2)
+            ##$assignResponse = Invoke-RestMethod -Uri $assignIpUrl -Headers $Headers -Method Post -Body ($assignIpBody | ConvertTo-Json -Depth 2)
+# JSON-Daten in den Body der Anfrage umwandeln
+$assignIpBodyJson = $assignIpBody | ConvertTo-Json -Depth 3
 
+# POST-Anfrage mit JSON-Body
+$assignResponse = Invoke-RestMethod -Uri $assignIpUrl -Headers $Headers -Method Post -Body $assignIpBodyJson
             # Rückgabe der zugewiesenen IP-Adresse
             return $assignResponse
         }
