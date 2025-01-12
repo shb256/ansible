@@ -96,7 +96,7 @@ function Get-IpAddressFromNetbox {
         if ($freeIpResponse.results.Count -gt 0) {
             # Nächste freie IP-Adresse auswählen
             $freeIp = $freeIpResponse.results[0].address
-
+            write-host $freeIp
             # IP-Adresse dem Interface zuweisen
             $assignIpUrl = "$NetboxUrl/ipam/ip-addresses/"
             $objtyp =  "dcim.interface"
