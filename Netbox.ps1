@@ -99,9 +99,9 @@ function Get-IpAddressFromNetbox {
 
             # IP-Adresse dem Interface zuweisen
             $assignIpUrl = "$NetboxUrl/ipam/ip-addresses/"
-            objtyp =  "dcim.interface"
+            $objtyp =  "dcim.interface"
             if($Source -eq "virtualization"){
-                objtyp="virtualization.vminterface"
+                $objtyp="virtualization.vminterface"
             }
             $assignIpBody = @{
                 address         = $freeIp
