@@ -6,8 +6,8 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
     Write-Host "Chocolatey ist bereits installiert. Aktualisierung wird durchgeführt..."
     choco upgrade chocolatey -y
 }
-choco upgrade wireguard -y --force
-choco upgrade openssh --params "/SSHServerFeature" -y --force
+choco upgrade wireguard -y
+choco upgrade openssh --params "/SSHServerFeature" -y
 
 # Konfigurationsvariablen
 $NetboxUrl = "https://nb.durchhalten.org/api"  # URL zu deiner NetBox API
