@@ -92,14 +92,13 @@ function Get-IpAddressFromNetbox {
         $freeIpUrl = "$NetboxUrl/ipam/prefixes/$SubnetId/available-ips/"
 
         # Abrufen der freien IP-Adresse
-        Invoke-RestMethod -Uri $freeIpUrl -Headers $Headers -Method Get
         $freeIpResponse = Invoke-RestMethod -Uri $freeIpUrl -Headers $Headers -Method Get
         if ($freeIpResponse.results.Count -gt 0) {
             echo "HIER"
             echo $freeIpResponse
             echo "DA"
             # Nächste freie IP-Adresse auswählen
-            $freeIp = $freeIpResponse.results[0].address
+            $freeIp = $freeIpResponse.results[0].display
             write-host "XXXX $freeIp XXX"
             # IP-Adresse dem Interface zuweisen
             $assignIpUrl = "$NetboxUrl/ipam/ip-addresses/"
