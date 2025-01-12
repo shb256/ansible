@@ -1,4 +1,3 @@
-
 $ApiToken = $env:Token
 if (-not (Get-Command "choco" -ErrorAction SilentlyContinue)) {
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
@@ -21,6 +20,7 @@ $source="dcim"
 # Header für die Authentifizierung
 $Headers = @{
     "Authorization" = "Token $ApiToken"
+    "Content-Type"  = "application/json"
 }
 
 # Funktion, um den Computer in NetBox zu finden
