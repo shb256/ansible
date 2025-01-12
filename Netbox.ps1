@@ -95,6 +95,8 @@ function Get-IpAddressFromNetbox {
         $freeIpResponse = Invoke-RestMethod -Uri $freeIpUrl -Headers $Headers -Method Get
         if ($freeIpResponse.results.Count -gt 0) {
             echo "HIER"
+            echo $freeIpResponse
+            echo "DA"
             # Nächste freie IP-Adresse auswählen
             $freeIp = $freeIpResponse.results[0].address
             write-host "XXXX $freeIp XXX"
