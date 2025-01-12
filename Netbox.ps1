@@ -76,7 +76,8 @@ function Get-InterfaceFromNetbox {
 # Funktion, um die IP-Adresse des Interfaces abzurufen
 function Get-IpAddressFromNetbox {
     param (
-        [string]$InterfaceId
+        [string]$InterfaceId,
+        [string]$SubnetId
     )
     $url = "$NetboxUrl/ipam/ip-addresses/?interface_id=$InterfaceId"
     if ($Source -eq "virtualization") {
@@ -84,6 +85,40 @@ function Get-IpAddressFromNetbox {
         }
     
     $response = Invoke-RestMethod -Uri $url -Headers $Headers -Method Get
+
+ # Wenn keine IP-Adresse hinterlegt ist, finde die nächste freie IP
+    if ($response.results.Count -eq 0) {
+        # URL für freie IP-Adressen aus dem angegebenen Subnetz
+        $freeIpUrl = "$NetboxUrl/ipam/prefixes/$SubnetId/available-ips/"
+
+        # Abrufen der freien IP-Adresse
+        $freeIpResponse = Invoke-RestMethod -Uri $freeIpUrl -Headers $Headers -Method Get
+        if ($freeIpResponse.results.Count -gt 0) {
+            # Nächste freie IP-Adresse auswählen
+            $freeIp = $freeIpResponse.results[0].address
+
+            # IP-Adresse dem Interface zuweisen
+            $assignIpUrl = "$NetboxUrl/ipam/ip-addresses/"
+            $assignIpBody = @{
+                address         = $freeIp
+                status          = "active"
+                interface       = $InterfaceId
+                assigned_object_type = ($Source -eq "virtualization") ? "virtualization.vminterface" : "dcim.interface"
+            }
+
+            # IP-Adresse in Netbox hinzufügen
+            $assignResponse = Invoke-RestMethod -Uri $assignIpUrl -Headers $Headers -Method Post -Body ($assignIpBody | ConvertTo-Json -Depth 2)
+
+            # Rückgabe der zugewiesenen IP-Adresse
+            return $assignResponse
+        }
+        else {
+            Write-Error "Keine verfügbare IP-Adresse im Subnetz mit der ID $SubnetId gefunden."
+        }
+    }
+
+    # Wenn IP-Adresse bereits vorhanden ist, Rückgabe der Ergebnisse
+    
     return $response.results
 }
 
@@ -149,6 +184,13 @@ if ($device.Count -eq 0) {
     exit 1
 }
 $deviceId = $device[0].id
+$PublicKey = $device[0].config_context.WG_WTS_PublicKeyServer
+$Endpoint = $device[0].config_context.WG_WTS_Endpoint
+$PersistentKeepalive = $device[0].config_context.WG_WTS_PersistentKeepalive
+$AllowedIPs = $device[0].config_context.WG_WTS_AllowedIPs
+$pubSshKey = $device[0].config_context.pubSshKey
+$IpPrefix = $device[0].config_context.WG_WTS_IPPrefix
+
 Write-Output "Gerät gefunden: ID = $deviceId"
 
 Write-Output "Suche nach Interface '$InterfaceName'..."
@@ -162,7 +204,7 @@ $interfaceId = $interface[0].id
 Write-Output "Interface gefunden: ID = $interfaceId"
 
 Write-Output "Suche nach IP-Adresse des Interfaces..."
-$ipAddress = Get-IpAddressFromNetbox -InterfaceId $interfaceId
+$ipAddress = Get-IpAddressFromNetbox -InterfaceId $interfaceId -SubnetId $IpPrefix
 if ($ipAddress.Count -eq 0) {
     Write-Error "Keine IP-Adresse für Interface '$InterfaceName' gefunden!"
     exit 1
@@ -179,11 +221,6 @@ Update-LocalContext -DeviceId $deviceId -Key "WTS_Pub_WG" -Value $publicKey
 Write-Output "Öffentlicher Schlüssel erfolgreich hochgeladen."
 
 
-$PublicKey = $device[0].config_context.WG_WTS_PublicKeyServer
-$Endpoint = $device[0].config_context.WG_WTS_Endpoint
-$PersistentKeepalive = $device[0].config_context.WG_WTS_PersistentKeepalive
-$AllowedIPs = $device[0].config_context.WG_WTS_AllowedIPs
-$pubSshKey = $device[0].config_context.pubSshKey
 
 
 
