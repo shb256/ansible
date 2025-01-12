@@ -106,7 +106,7 @@ function Get-IpAddressFromNetbox {
             $assignIpBody = @{
                 address         = $freeIp
                 status          = "active"
-                interface       = $InterfaceId
+                assigned_object_id       = $InterfaceId
                 assigned_object_type = $objtyp
             }
 
