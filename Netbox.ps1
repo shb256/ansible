@@ -33,7 +33,24 @@ function Get-DeviceFromNetbox {
         $response = Invoke-RestMethod -Uri $url -Headers $Headers -Method Get
         $typ = "virtualization"
     }
-    
+    if ($response.results.Count -eq 0) {
+        Write-Host "Kein Gerät oder VM mit dem Namen '$ComputerName' gefunden. Erstelle neues Gerät."
+
+        # Gerätedaten für die Erstellung vorbereiten
+        $deviceData = @{
+            name        = $ComputerName
+            device_role = 8
+            device_type = 39
+            status      = "active"  # Standardstatus
+        }
+
+        # POST-Anfrage zum Erstellen des Geräts
+        $url = "$NetboxUrl/dcim/devices/"
+        $response = Invoke-RestMethod -Uri $url -Headers $Headers -Method Post -Body ($deviceData | ConvertTo-Json -Depth 10)
+
+        Write-Host "Neues Gerät erstellt: $($response.name) mit ID: $($response.id)"
+        $typ = "dcim"
+    }
     return @{
         Results = $response.results
         Source  = $typ
