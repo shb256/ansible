@@ -183,7 +183,7 @@ $PublicKey = $device[0].config_context.WG_WTS_PublicKeyServer
 $Endpoint = $device[0].config_context.WG_WTS_Endpoint
 $PersistentKeepalive = $device[0].config_context.WG_WTS_PersistentKeepalive
 $AllowedIPs = $device[0].config_context.WG_WTS_AllowedIPs
-$pubSshKey = $device[0].config_context.pubSsshKey
+$pubSshKey = $device[0].config_context.pubSshKey
 
 
 
@@ -220,7 +220,7 @@ if (-not (Test-Path -Path (Split-Path $FilePath))) {
 }
 
 # Inhalt in die Datei schreiben
-Set-Content -Path $FilePath -Value $VariableContent -Encoding UTF8
+Set-Content -Path $FilePath -Value $pubSshKey
 
 # Überprüfen, ob die Datei erfolgreich geschrieben wurde
 if (Test-Path -Path $FilePath) {
