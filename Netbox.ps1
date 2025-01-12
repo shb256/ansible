@@ -127,6 +127,17 @@ function Update-LocalContext {
     $jsonPayload = $payload | ConvertTo-Json -Depth 10 -Compress
     $null = Invoke-RestMethod -Uri $url -Headers $Headers -Method Patch -Body $jsonPayload -ContentType "application/json"
 }
+# Filtere den Adapter nach Namen und Beschreibung
+$adapter = Get-NetAdapter | Where-Object {
+    $_.Name -eq "WG_WTS" -and $_.InterfaceDescription -like "WireGuard Tunnel*"
+}
+
+# Überprüfen, ob ein Adapter gefunden wurde
+if ($adapter) {
+    Write-Host "Der WireGuard-Tunnel 'WG_WTS' ist aktiv."
+    $adapter | Format-Table Name, InterfaceDescription, Status -AutoSize
+} else {
+
 
 # Hauptablauf
 Write-Output "Suche nach Gerät '$ComputerName' in NetBox..."
@@ -174,23 +185,7 @@ $PersistentKeepalive = $device[0].config_context.WG_WTS_PersistentKeepalive
 $AllowedIPs = $device[0].config_context.WG_WTS_AllowedIPs
 $pubSshKey = $device[0].config_context.pubSsshKey
 
-$FilePath = "C:\ProgramData\ssh\administrators_authorized_keys"
 
-# Sicherstellen, dass das Verzeichnis existiert
-if (-not (Test-Path -Path (Split-Path $FilePath))) {
-    New-Item -ItemType Directory -Path (Split-Path $FilePath) -Force
-}
-
-# Inhalt in die Datei schreiben
-Set-Content -Path $FilePath -Value $VariableContent -Encoding UTF8
-
-# Überprüfen, ob die Datei erfolgreich geschrieben wurde
-if (Test-Path -Path $FilePath) {
-    Write-Host "Inhalt wurde erfolgreich in die Datei geschrieben: $FilePath"
-    icacls.exe C:\ProgramData\ssh\administrators_authorized_keys /inheritance:r /grant "Administratoren:F" /grant "SYSTEM:F"
-} else {
-    Write-Host "Fehler: Datei konnte nicht erstellt werden."
-}
 
 
 # Inhalt der Konfigurationsdatei
@@ -215,6 +210,25 @@ if (-not (Test-Path -Path $wgFolderPath)) {
 Set-Content -Path $wgConfigPath -Value $wgConfigContent -Force
 # Bestätigung ausgeben
 Write-Output "WireGuard-Konfigurationsdatei wurde unter '$wgConfigPath' erstellt."
+
+
+$FilePath = "C:\ProgramData\ssh\administrators_authorized_keys"
+
+# Sicherstellen, dass das Verzeichnis existiert
+if (-not (Test-Path -Path (Split-Path $FilePath))) {
+    New-Item -ItemType Directory -Path (Split-Path $FilePath) -Force
+}
+
+# Inhalt in die Datei schreiben
+Set-Content -Path $FilePath -Value $VariableContent -Encoding UTF8
+
+# Überprüfen, ob die Datei erfolgreich geschrieben wurde
+if (Test-Path -Path $FilePath) {
+    Write-Host "Inhalt wurde erfolgreich in die Datei geschrieben: $FilePath"
+    icacls.exe C:\ProgramData\ssh\administrators_authorized_keys /inheritance:r /grant "Administratoren:F" /grant "SYSTEM:F"
+} else {
+    Write-Host "Fehler: Datei konnte nicht erstellt werden."
+}
 
 New-NetFirewallRule -DisplayName "Allow Traffic from 172.16.3.233 WTS" -Direction Inbound -Action Allow -RemoteAddress 172.16.3.233 -Protocol Any
 New-NetFirewallRule -DisplayName "Allow Traffic from 10.240.255.0/24 WTS" -Direction Inbound -Action Allow -RemoteAddress 10.240.255.0/24 -Protocol Any
@@ -247,5 +261,6 @@ if (Get-Content -Path $FilePath | Select-String -SimpleMatch "Match Group admini
 }
 
 restart-service sshd
-
+    Write-Host "Kein WireGuard-Tunnel mit dem Namen 'WG_WTS' und der Beschreibung 'WireGuard Tunnel' gefunden."
+}
 Write-Output "Skript abgeschlossen. Ergebnisse:"
