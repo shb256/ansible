@@ -98,7 +98,7 @@ function Get-IpAddressFromNetbox {
             write-host $freeIpResponse
             write-host "DA"
             # Nächste freie IP-Adresse auswählen
-            $freeIp = $freeIpResponse.results[0].display
+            $freeIp = $freeIpResponse[0].address
             write-host "XXXX $freeIp XXX"
             # IP-Adresse dem Interface zuweisen
             $assignIpUrl = "$NetboxUrl/ipam/ip-addresses/"
