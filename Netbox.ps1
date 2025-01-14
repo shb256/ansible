@@ -97,7 +97,6 @@ function Get-IpAddressFromNetbox {
         if ($freeIpResponse.results.Count -gt 0) {
             # Nächste freie IP-Adresse auswählen
             $freeIp = $freeIpResponse[0].address
-            $freeIp = $freeIp -replace "/\d+$", "/32"
             write-host "XXXX $freeIp XXX"
             # IP-Adresse dem Interface zuweisen
             $assignIpUrl = "$NetboxUrl/ipam/ip-addresses/"
@@ -225,6 +224,8 @@ if ($ipAddress.Count -eq 0) {
 }
 
 $ip = $ipAddress[0].address
+$ip = $ip -replace "/\d+$", "/32"
+
 Write-Output "IP-Adresse gefunden: $ip"
 
 $privateKey = & 'C:\Program Files\WireGuard\wg.exe'  genkey
