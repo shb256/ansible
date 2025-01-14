@@ -97,6 +97,7 @@ function Get-IpAddressFromNetbox {
         if ($freeIpResponse.results.Count -gt 0) {
             # Nächste freie IP-Adresse auswählen
             $freeIp = $freeIpResponse[0].address
+            $freeIp = $freeIp -replace "/\d+$", "/32"
             write-host "XXXX $freeIp XXX"
             # IP-Adresse dem Interface zuweisen
             $assignIpUrl = "$NetboxUrl/ipam/ip-addresses/"
