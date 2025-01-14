@@ -66,7 +66,8 @@ function Get-DeviceFromNetbox {
 function Get-InterfaceFromNetbox {
     param (
         [string]$DeviceId,
-        [string]$InterfaceName
+        [string]$InterfaceName,
+        [string]$tenantID
     )
     $url = "$NetboxUrl/$source/interfaces/?device_id=$DeviceId&name=$InterfaceName"
     $response = Invoke-RestMethod -Uri $url -Headers $Headers -Method Get
@@ -108,6 +109,9 @@ function Get-IpAddressFromNetbox {
                 status          = "active"
                 assigned_object_id       = $InterfaceId
                 assigned_object_type = $objtyp
+                vrf            = 4
+                description    = $ComputerName
+                tenant = $tenantID
             }
 
             # IP-Adresse in Netbox hinzufügen
@@ -198,11 +202,12 @@ $PersistentKeepalive = $device[0].config_context.WG_WTS_PersistentKeepalive
 $AllowedIPs = $device[0].config_context.WG_WTS_AllowedIPs
 $pubSshKey = $device[0].config_context.pubSshKey
 $IpPrefix = $device[0].config_context.WG_WTS_IPPrefix
+$tenantID = $device[0].tenant.id
 
 Write-Output "Gerät gefunden: ID = $deviceId"
 
 Write-Output "Suche nach Interface '$InterfaceName'..."
-$interface = Get-InterfaceFromNetbox -DeviceId $deviceId -InterfaceName $InterfaceName
+$interface = Get-InterfaceFromNetbox -DeviceId $deviceId -InterfaceName $InterfaceName -tenantID $tenantID
 if ($interface.Count -eq 0) {
     Write-Error "Interface '$InterfaceName' nicht gefunden!"
     exit 1
