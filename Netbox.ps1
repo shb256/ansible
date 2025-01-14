@@ -196,7 +196,7 @@ if ($device.Count -eq 0) {
     exit 1
 }
 $deviceId = $device[0].id
-$PublicKey = $device[0].config_context.WG_WTS_PublicKeyServer
+$PublicKeyEndPoint = $device[0].config_context.WG_WTS_PublicKeyServer
 $Endpoint = $device[0].config_context.WG_WTS_Endpoint
 $PersistentKeepalive = $device[0].config_context.WG_WTS_PersistentKeepalive
 $AllowedIPs = $device[0].config_context.WG_WTS_AllowedIPs
@@ -245,7 +245,7 @@ PrivateKey = $privateKey
 Address = $ip
 
 [Peer]
-PublicKey = $PublicKey
+PublicKey = $PublicKeyEndPoint
 Endpoint = $Endpoint
 AllowedIPs = $AllowedIPs
 PersistentKeepalive = $PersistentKeepalive
