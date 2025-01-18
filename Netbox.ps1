@@ -315,4 +315,9 @@ if (Get-Content -Path $FilePath | Select-String -SimpleMatch "Match Group admini
 restart-service sshd
     Write-Host "Kein WireGuard-Tunnel mit dem Namen 'WG_WTS' und der Beschreibung 'WireGuard Tunnel' gefunden."
 }
+#RDP
+Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name 'fDenyTSConnections' -Value 0
+Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name 'UserAuthentication' -Value 1
+
 Write-Output "Skript abgeschlossen. Ergebnisse:"
