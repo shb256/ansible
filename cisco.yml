@@ -33,6 +33,7 @@
       ansible.builtin.file:
         path: /tmp/tasks
         state: directory
+      delegate_to: 127.0.0.1
 
     - name: Gerenderte Konfiguration speichern
       copy:
