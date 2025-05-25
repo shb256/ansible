@@ -6,6 +6,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
     choco upgrade chocolatey -y
 }
 choco upgrade wireguard -y
+choco install powershell-core -y
 choco upgrade openssh --params "/SSHServerFeature" -y
 
 # Konfigurationsvariablen
