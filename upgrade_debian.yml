@@ -1,36 +1,44 @@
----
-- hosts: all
+- hosts: {{ host }} | all
   tasks:
-    - name: Prepare. Autoremove old packages
+    - name: Prepare: remove old packages and clean cache
       apt:
         autoremove: true
         clean: true
 
-    - name: Upgrade to latest release (apt-get dist-upgrade)
-      ansible.builtin.shell: |
-        sed -i 's/bullseye/bookworm/g' /etc/apt/sources.list
-        sed -i 's/non-free non-free-firmware-firmware//g' /etc/apt/sources.list
-        if ! grep non-free-firmware /etc/apt/sources.list
-        then
-            sed -i 's/non-free/non-free non-free-firmware/g' /etc/apt/sources.list
-        fi
+    - name: Update existing packages to latest point release
+      apt:
+        upgrade: dist
+        update_cache: yes
 
-    - name: Update apt repo and cache on all Debian/Ubuntu boxes
+    - name: Replace Debian suite from bookworm to trixie in sources.list
+      ansible.builtin.shell: |
+        sed -i 's/bookworm/trixie/g' /etc/apt/sources.list
+        # also update any list files in sources.list.d
+        find /etc/apt/sources.list.d -type f -name "*.list" -exec sed -i 's/bookworm/trixie/g' {} +
+
+    - name: Refresh APT repository lists after suite change
       apt:
         update_cache: yes
         force_apt_get: yes
         cache_valid_time: 0
 
-    - name: Upgrade all packages on servers
-      apt: upgrade=dist force_apt_get=yes
+    - name: Perform full upgrade to Debian Trixie
+      apt:
+        upgrade: dist
+        force_apt_get: yes
 
-    - name: Check if a reboot is needed on all servers
+    - name: Autoremove obsolete packages after upgrade
+      apt:
+        autoremove: true
+
+    - name: Check if a reboot is needed
+      stat:
+        path: /var/run/reboot-required
       register: reboot_required_file
-      stat: path=/var/run/reboot-required get_md5=no
 
-    - name: Reboot the box if kernel updated
+    - name: Reboot the box if required
       reboot:
-        msg: "Reboot initiated by Ansible for kernel updates"
+        msg: "Reboot initiated by Ansible after Debian Trixie upgrade"
         connect_timeout: 5
         reboot_timeout: 300
         pre_reboot_delay: 0
