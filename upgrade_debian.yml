@@ -1,6 +1,6 @@
 - hosts: {{  hosts | default('all') }} 
   tasks:
-    - name: Prepare: remove old packages and clean cache
+    - name: Prepare remove old packages and clean cache
       apt:
         autoremove: true
         clean: true
