@@ -1,4 +1,4 @@
-- hosts: {{ host }} | all
+- hosts: {{  host | default('all') }} 
   tasks:
     - name: Prepare: remove old packages and clean cache
       apt:
